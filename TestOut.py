@@ -61,6 +61,11 @@ class TestOut(OpenRTM_aist.DataFlowComponentBase):
 		#{%wsb:init
 		
 
+
+                self._d_out0 = RTC.TimedLong(RTC.Time(0, 0), 0)
+                """
+                """
+                self._out0Out = OpenRTM_aist.OutPort("out0", self._d_out0)
 		#%}
 
 		# initialize of configuration-data.
@@ -82,6 +87,8 @@ class TestOut(OpenRTM_aist.DataFlowComponentBase):
 
 		#{%wsb:on_initialize
 
+
+                self.addOutPort("out0", self._out0Out)
 		#%}
 
 		# Bind variables and configuration variable
@@ -149,9 +156,9 @@ class TestOut(OpenRTM_aist.DataFlowComponentBase):
 	#	# @return RTC::ReturnCode_t
 	#	#
 	#	#
-	#def onActivated(self, ec_id):
-	#
-	#	return RTC.RTC_OK
+	def onActivated(self, ec_id):
+		self.queue = [1, 2, 3]
+		return RTC.RTC_OK
 	
 	#	##
 	#	#
@@ -163,9 +170,9 @@ class TestOut(OpenRTM_aist.DataFlowComponentBase):
 	#	# @return RTC::ReturnCode_t
 	#	#
 	#	#
-	#def onDeactivated(self, ec_id):
-	#
-	#	return RTC.RTC_OK
+	def onDeactivated(self, ec_id):
+	
+		return RTC.RTC_OK
 	
 	#	##
 	#	#
@@ -177,9 +184,12 @@ class TestOut(OpenRTM_aist.DataFlowComponentBase):
 	#	# @return RTC::ReturnCode_t
 	#	#
 	#	#
-	#def onExecute(self, ec_id):
-	#
-	#	return RTC.RTC_OK
+	def onExecute(self, ec_id):
+		if len(self.queue) > 0:
+			self._d_out0.data = self.queue[0]
+			self._out0Out.write()
+			self.queue = self.queue[1:]
+		return RTC.RTC_OK
 	
 	#	##
 	#	#
