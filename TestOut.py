@@ -59,8 +59,6 @@ class TestOut(OpenRTM_aist.DataFlowComponentBase):
 
 
 		#{%wsb:init
-		
-
 
                 self._d_out0 = RTC.TimedLong(RTC.Time(0, 0), 0)
                 """
@@ -157,7 +155,8 @@ class TestOut(OpenRTM_aist.DataFlowComponentBase):
 	#	#
 	#	#
 	def onActivated(self, ec_id):
-		self.queue = [1, 2, 3]
+		self._d_out0.data = 1
+		self._out0Out.write()
 		return RTC.RTC_OK
 	
 	#	##
@@ -184,12 +183,8 @@ class TestOut(OpenRTM_aist.DataFlowComponentBase):
 	#	# @return RTC::ReturnCode_t
 	#	#
 	#	#
-	def onExecute(self, ec_id):
-		if len(self.queue) > 0:
-			self._d_out0.data = self.queue[0]
-			self._out0Out.write()
-			self.queue = self.queue[1:]
-		return RTC.RTC_OK
+	# def onExecute(self, ec_id):
+	#	return RTC.RTC_OK
 	
 	#	##
 	#	#
